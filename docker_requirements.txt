@@ -3,5 +3,3 @@ pandas==1.5.3
 flask==2.3.2
 scikit-learn==1.2.2
 nltk==3.2.4
-matplotlib==3.6.3
-seaborn==0.12.2
