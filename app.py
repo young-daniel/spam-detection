@@ -1,8 +1,15 @@
 import flask
+import pickle
 from flask import jsonify, request
+from preprocessing import clean_message
+
+with open('pipeline.pickle', 'rb') as f:
+    pipeline = pickle.load(f)
+output_map = {0:'ham', 1:'spam'}
 
 app = flask.Flask('spam-detection')
 
+# for sanity checks, nothing fancy
 @app.route('/api/v1/status', methods=['GET'])
 def status():
     return jsonify('API running')
@@ -14,11 +21,10 @@ def predict():
         return "Error: no message specified, please specify a message for classification"
     else:
         print("Received message: {}".format(text))
-    # dummy result for now
-    # need to add vectorization + model predict
-    results = 'ham'
-    print(results)
-    return jsonify(results)
+    text = clean_message(text)
+    result = pipeline.predict([text])
+    result = output_map[result[0]]
+    return jsonify(result)
 
 
 if __name__ == '__main__':
